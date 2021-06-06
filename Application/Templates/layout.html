@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='primary.css') }}">
+    <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">-->
+
+</head>
+
+
+
+<body class="bg-steel">
+
+    <header class="site-header">
+        <div class="pos-f-t">
+
+            <div class="collapse" id="navbarToggleExternalContent">
+
+
+
+                <!-- buton pentru new file -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newTag">
+                    New file
+                </button>
+
+                <!-- buton pentru newtag -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newTag">
+                    New tag
+                </button>
+
+                <!-- lista tags -->
+                {%if tags %}
+                    {% for tt in tags %}
+                            <form action="{{ url_for('selectTag', cn=tt.name) }}" method="post">
+                                <button type="submit" class="btn btn-primary" >{{tt.name}}</button>
+                                <a href="{{ url_for('deleteTag', ct=tt.name) }}">X</a>
+                            </form>
+                    {% endfor %}
+                {% endif%}
+
+
+            </div>
+
+            <nav class="navbar navbar-dark bg-darksteel navbar-expand-lg fixed-top">
+
+               <div class="collapse navbar-collapse">
+
+                        <!--
+                    <button class="navbar-toggler mr-3 " type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    -->
+                   {% if current_user.is_authenticated: %}
+                   <ul class="navbar-nav mr-auto">
+                         <li class="nav-item active">
+                            <a class="navbar-brand mr-auto mr-sm-5" href="{{ url_for('home') }}">Notable</a>
+                         </li>
+
+                         <li class="nav-item active">
+                            <a class="navbar-brand mr-sm-4" href="{{ url_for('notes') }}">Notes</a>
+                         </li>
+
+
+
+                      <!--   <li class="nav-item active">
+
+                            <button type="button" class="btn navbar-brand mr-automr-sm-5" data-toggle="modal" data-target="#newNote">
+                                New note
+                            </button>
+                        </li>-->
+
+                        <li class="nav-item active">
+                            <a class="navbar-brand mr-sm-4" href="{{ url_for('files') }}">Files</a>
+                         </li>
+
+                     <!--  <li class="nav-item active">
+                            <button type="button" class="btn navbar-brand mr-automr-sm-4" data-toggle="modal" data-target="#newFile">
+                                New file
+                            </button>
+                        </li>
+                                        -->
+                         <li class="nav-item active my-lg-0">
+                             <div class="dropdown ">
+                            <a class="nav-link dropdown-toggle navbar-brand mr-sm-4" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Tags
+                            </a>
+
+                                 <div class="dropdown-menu bg-darksteel" aria-labelledby="navbarDropdown">
+                                <!-- lista tags -->
+                                {%if tags %}
+                                         <!-- buton pentru newtag -->
+                                        <button type="button" class="btn navbar-brand" data-toggle="modal" data-target="#newTag">
+                                            New tag
+                                        </button>
+                                        <form action="{{ url_for('selectTag', cn='~') }}" method="post">
+                                            <button type="submit" class="btn navbar-brand" >All</button>
+                                        </form>
+                                        {% for tt in tags %}
+                                                <form action="{{ url_for('selectTag', cn=tt.name) }}" method="post">
+                                                    <button type="submit" class="btn navbar-brand" >{{tt.name}}</button>
+                                                    <a href="{{ url_for('deleteTag', ct=tt.name) }}">X</a>
+
+                                                </form>
+
+                                        {% endfor %}
+
+
+
+                                {% endif%}
+                            </div>
+                        </div>
+                         </li>
+                   </ul>
+
+                            <a class="nav-item nav-link " href="{{ url_for('logout') }}">Logout</a>
+
+
+                   {% else: %}
+
+                    <a class="navbar-brand mr-auto" href="/">Notable</a>
+
+                    <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+
+                    <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+
+                   {% endif %}
+
+
+
+
+                    <!--<div class="navbar-nav mr-4">
+                         <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+                     </div>-->
+
+            <!-- Navbar Right Side -->
+
+
+                </div>
+
+             </nav>
+
+        </div>
+    </header>
+
+
+    <main role="main" class="container ">
+      <div class="row">
+        <div class="col-md-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, m in messages %}
+                        <div class='alert alert-{{category}}'>
+                            {{m}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+
+      </div>
+    </main>
+
+     <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+    {%if note%}
+        <div class="modal fade" id="newNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                <form method="POST" action="">
+                    {{note.hidden_tag()}}
+                    <fieldset class="form-group">
+
+                    <div class="form-group">
+                    <!--<input type="text">-->
+                    {{ note.name.label(class="form-control-label") }}
+                        {% if note.name.errors %}
+                            {{ note.name(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for err in note.name.errors %}
+                                    <span>
+                                        {{err}}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+                        {% else %}
+                             {{ note.name(class="form-control form-control-lg ") }}
+                        {% endif %}
+
+
+
+                    <!--<textarea class="form-control rounded-0" id="exampleFormControlTextarea2" rows="3"></textarea>-->
+                    {{ note.content.label(class="form-control-label") }}
+                        {% if note.content.errors %}
+                            {{ note.content(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for err in note.content.errors %}
+                                    <span>
+                                        {{err}}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+                        {% else %}
+                             {{ note.content(class="form-control form-control-lg form-group ") }}
+                        {% endif %}
+
+                        {{ note.tags.label(class="form-control-label form-group ") }}
+
+                        {% if t=='~' %}
+                            {{ note.tags(class="form-control form-control-lg form-group ", )}}
+                        {% else %}
+                            {{ note.tags(class="form-control form-control-lg form-group ", value=t)}}
+                        {% endif %}
+                    </div>
+                    </fieldset>
+
+
+
+
+
+                  <div class="form-group form-group">
+                        <button type="button" class="btn btn-secondary form-group " data-dismiss="modal">Cancel</button>
+                        {{ note.submit(class="btn btn-outline-info") }}
+
+                  </div>
+
+              </form>
+
+
+
+                </div>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+
+    {%if tag%}
+        <!-- Modal pentru tag -->
+        <div class="modal fade" id="newTag" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+        <form method="POST" action="">
+            {{tag.hidden_tag()}}
+            <fieldset class="form-group">
+
+            <div class="form-group">
+
+            {{ tag.name2.label(class="form-control-label") }}
+                {% if tag.name2.errors %}
+                    {{ tag.name2(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in tag.name2.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                     {{ tag.name2(class="form-control form-control-lg ") }}
+                {% endif %}
+        </div>
+            </fieldset>
+
+          <div class="form-group">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                {{ tag.submit(class="btn btn-outline-info") }}
+            </div>
+
+      </form>
+
+
+
+        </div>
+    </div>
+  </div>
+</div>
+    {% endif %}
+
+
+    {%if file%}
+        <div class="modal fade" id="newFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                <form method="POST" action="">
+                    {{file.hidden_tag()}}
+                    <fieldset class="form-group">
+
+                    <div class="form-group">
+
+                    {{ file.name1.label(class="form-control-label") }}
+                        {% if file.name1.errors %}
+                            {{ file.name1(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for err in file.name1.errors %}
+                                    <span>
+                                        {{err}}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+                        {% else %}
+                             {{ file.name1(class="form-control form-control-lg ") }}
+                        {% endif %}
+                </div>
+                    </fieldset>
+
+                  <div class="form-group">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+                      {{ file.submit(class="btn btn-outline-info") }}
+                    </div>
+
+              </form>
+
+
+
+                </div>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+
+
+
+
+</body>
+</html>

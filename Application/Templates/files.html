@@ -1,0 +1,53 @@
+{%  extends "layout.html" %}
+{%block content%}
+<h1>{{current_user.username}}</h1>
+<!-- buton pentru newnote -->
+
+
+<!-- buton pentru edit note -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newFile">
+  New file
+</button>
+
+
+<div class="modal fade" id="newFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+        <form method="POST" action="">
+            {{fileform.hidden_tag()}}
+            <fieldset class="form-group">
+
+            <div class="form-group">
+
+            {{ fileform.name.label(class="form-control-label") }}
+                {% if fileform.name.errors %}
+                    {{ fileform.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in fileform.name.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                     {{ fileform.name(class="form-control form-control-lg ") }}
+                {% endif %}
+        </div>
+            </fieldset>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <div class="form-group">
+                {{ fileform.submit(class="btn btn-outline-info") }}
+            </div>
+
+      </form>
+
+
+
+        </div>
+    </div>
+  </div>
+</div>
+
+{%endblock%}

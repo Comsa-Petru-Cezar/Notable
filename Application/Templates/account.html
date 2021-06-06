@@ -1,0 +1,124 @@
+{%  extends "layout.html" %}
+{%block content%}
+
+{% if edit %}
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#editNote").modal('show');
+        });
+    </script>
+    <div class="modal show" id="editNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            <form method="POST" action="">
+                {{edit.hidden_tag()}}
+                <fieldset class="form-group">
+
+                <div class="form-group">
+                <!--<input type="text">-->
+                {{ edit.name.label(class="form-control-label") }}
+                    {% if edit.name.errors %}
+                        {{ edit.name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for err in edit.name.errors %}
+                                <span>
+                                    {{err}}
+                                </span>
+                            {% endfor %}
+
+                        </div>
+                    {% else %}
+                         {{ edit.name(class="form-control form-control-lg ") }}
+                    {% endif %}
+
+
+
+                {{ edit.content.label(class="form-control-label") }}
+                    {% if edit.content.errors %}
+                        {{ edit.content(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for err in edit.content.errors %}
+                                <span>
+                                    {{err}}
+                                </span>
+                            {% endfor %}
+
+                        </div>
+                    {% else %}
+                         {{ edit.content(class="form-control form-control-lg form-group ") }}
+                    {% endif %}
+
+                    {{ edit.tags.label(class="form-control-label form-group ") }}
+
+
+                    {{ edit.tags(class="form-control form-control-lg form-group ")}}
+
+                </div>
+                </fieldset>
+
+
+
+
+
+                <div class="form-group ">
+                    {{ edit.submit(class="btn btn-outline-info") }}
+                </div>
+
+                <form action="{{ url_for('cancel') }}" method="post" >
+                    <input class="btn btn-default	" type="submit" value="Cancel">
+                </form>
+          </form>
+
+
+
+            </div>
+        </div>
+      </div>
+    </div>
+{% endif %}
+
+ <a class="btn btn-primary " href="{{ url_for('back') }}">Back</a>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newFile">
+    New file
+</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newNote">
+    New note
+</button>
+
+<!-- lista files -->
+{% if files %}
+    {% for f in files %}
+
+                <a class="btn btn-primary " href="{{ url_for('toFile', file=f.name) }}">{{f.name}}</a>
+
+
+
+
+    {% endfor %}
+{% endif %}
+
+<!-- lista notes -->
+{% if notes %}
+    {% for n in notes %}
+        <article class="media content-section " style="background-color: #052072">
+            <div class="media-body ">
+                <h2 style="color: #ffffff">{{ n.name }} </h2>
+                <p style="color: #ffffff">{{ n.content }}</p>
+                <form action="{{ url_for('deleteNote', cn=n.name, t=t) }}" method="post">
+                    <input class="btn btn-danger form-group " type="submit" value="Delete">
+                </form>
+
+                <form action="{{ url_for('editNote', cn = n.name) }}" method="post">
+                    <input class="btn btn-primary form-group " type="submit" value="Edit">
+                </form>
+
+            </div>
+        </article>
+    {% endfor %}
+{% endif %}
+
+
+{%endblock%}

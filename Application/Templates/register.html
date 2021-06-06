@@ -1,0 +1,94 @@
+{%extends "layout.html"%}
+{%block content%}
+
+<div class="content-section">
+
+	<form action="" method="POST">
+		{{form.hidden_tag()}}
+		 <fieldset class="form-group">
+             <legend class="border-bottom mb-4">Register</legend>
+			<div class="form-group">
+			<!--<input type="text" name="username" class="form-control" placeholder="username" required>-->
+			{{ form.username.label(class="form-control-label") }}
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in form.username.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                     {{ form.username(class="form-control form-control-lg") }}
+                {% endif %}
+		</div>
+
+			<div class="form-group">
+			<!--<input type="text" name="email" class="form-control" placeholder="email" required>-->
+			{{ form.email.label(class="form-control-label") }}
+
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in form.email.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control form-control-lg") }}
+                {% endif %}
+		</div>
+
+			<div class="form-group">
+			<!--<input type="password" name="password" class="form-control" placeholder="password" required>-->
+			{{ form.password.label(class="form-control-label") }}
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in form.password.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                    {{ form.password(class="form-control form-control-lg") }}
+                {% endif %}
+		</div>
+
+			<div class="form-group">
+			<!--<input type="password" name="password confirmation" class="form-control" placeholder="password confirmation" required>-->
+			{{ form.confirm_password.label(class="form-control-label") }}
+                {% if form.confirm_password.errors %}
+                    {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in form.confirm_password.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                    {{ form.confirm_password(class="form-control form-control-lg") }}
+                {% endif %}
+		</div>
+		</fieldset>
+		<div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+
+        </div>
+	</form>
+</div>
+<div class="border-top pt-3">
+    <small style="color: #ffffff">
+        Already Have An Account<a class="ml-2" style="color: #0000ff" href="{{ url_for('login') }}">Sign In</a>
+    </small>
+</div>
+{%endblock%}

@@ -1,0 +1,249 @@
+{%  extends "layout.html" %}
+{%block content%}
+<h1>{{current_user.username}}</h1>
+{% if edit %}
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#editNote").modal('show');
+    });
+</script>
+<div class="modal show" id="editNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+        <form method="POST" action="">
+            {{edit.hidden_tag()}}
+            <fieldset class="form-group">
+
+            <div class="form-group">
+            <!--<input type="text">-->
+            {{ edit.name.label(class="form-control-label") }}
+                {% if edit.name.errors %}
+                    {{ edit.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in edit.name.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                     {{ edit.name(class="form-control form-control-lg ") }}
+                {% endif %}
+
+
+
+            {{ edit.content.label(class="form-control-label") }}
+                {% if edit.content.errors %}
+                    {{ edit.content(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in edit.content.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                     {{ edit.content(class="form-control form-control-lg") }}
+                {% endif %}
+
+                {{ edit.tags.label(class="form-control-label") }}
+
+
+                {{ edit.tags(class="form-control form-control-lg ")}}
+
+            </div>
+            </fieldset>
+
+
+
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <div class="form-group">
+                {{ edit.submit(class="btn btn-outline-info") }}
+            </div>
+
+      </form>
+
+
+
+        </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+<!-- buton pentru edit note -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newNote">
+  New node
+</button>
+
+{% if tag %}
+<!-- buton pentru newtag -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newTag">
+  New tag
+</button>
+<!-- Modal pentru tag -->
+<div class="modal fade" id="newTag" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+        <form method="POST" action="">
+            {{tag.hidden_tag()}}
+            <fieldset class="form-group">
+
+            <div class="form-group">
+
+            {{ tag.name.label(class="form-control-label") }}
+                {% if tag.name.errors %}
+                    {{ tag.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in tag.name.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                     {{ tag.name(class="form-control form-control-lg ") }}
+                {% endif %}
+        </div>
+            </fieldset>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <div class="form-group">
+                {{ tag.submit(class="btn btn-outline-info") }}
+            </div>
+
+      </form>
+
+
+
+        </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- lista tags -->
+{%if tags %}
+    {% for t in tags %}
+            <form action="{{ url_for('notes', st=t.name) }}" method="post">
+                <button type="submit" class="btn btn-primary" >{{t.name}}</button>
+                <a href="{{ url_for('deleteTags', st=t.name) }}">X</a>
+            </form>
+    {% endfor %}
+
+
+{% endif%}
+
+<!-- lista notes -->
+{% if notes %}
+    {% for n in notes %}
+        <article class="media content-section">
+            <div class="media-body">
+                <h2 class="article-title">{{ n.name }} </h2>
+                <p class="article-content">{{ n.content }}</p>
+                <form action="{{ url_for('deleteNotes', st=n.name) }}" method="post">
+                    <input class="btn btn-danger" type="submit" value="Delete">
+                </form>
+                {%if tag %}
+                <form action="{{ url_for('deleteNotes', st=n.name) }}" method="post">
+                    <input class="btn btn-primary" type="submit" value="Edit">
+                </form>
+                {%else%}
+                <form action="{{ url_for('notesEdit', en=n.name, st=t) }}" method="post">
+                    <input class="btn btn-primary" type="submit" value="Edit">
+                </form>
+                {%endif%}
+            </div>
+        </article>
+    {% endfor %}
+{% endif %}
+
+<!---->
+
+
+<!-- Modal pentru note -->
+<div class="modal fade" id="newNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  {%if note%}
+    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+        <form method="POST" action="">
+            {{note.hidden_tag()}}
+            <fieldset class="form-group">
+
+            <div class="form-group">
+            <!--<input type="text">-->
+            {{ note.name.label(class="form-control-label") }}
+                {% if note.name.errors %}
+                    {{ note.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in note.name.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                     {{ note.name(class="form-control form-control-lg ") }}
+                {% endif %}
+
+
+
+            <!--<textarea class="form-control rounded-0" id="exampleFormControlTextarea2" rows="3"></textarea>-->
+            {{ note.content.label(class="form-control-label") }}
+                {% if note.content.errors %}
+                    {{ note.content(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for err in note.content.errors %}
+                            <span>
+                                {{err}}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+                {% else %}
+                     {{ note.content(class="form-control form-control-lg") }}
+                {% endif %}
+
+                {{ note.tags.label(class="form-control-label") }}
+
+                {% if t %}
+                    {{ note.tags(class="form-control form-control-lg ", value=t, required=False)}}
+                {% else %}
+                    {{ note.tags(class="form-control form-control-lg ", required=False)}}
+                {%endif%}
+            </div>
+            </fieldset>
+
+
+
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <div class="form-group">
+                {{ note.submit(class="btn btn-outline-info") }}
+            </div>
+
+      </form>
+
+
+
+        </div>
+    </div>
+  </div>
+    {%endif%}
+</div>
+
+
+
+
+
+{%endblock%}
